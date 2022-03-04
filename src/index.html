@@ -9,66 +9,11 @@
     <link rel="stylesheet" href="./index.pcss" />
   </head>
   <body class="min-h-screen text-gray-900 bg-gray-100">
-    <div class="container mx-auto space-y-8">
-      <header class="px-4 py-4 mt-8 bg-white rounded-md shadow-md">
-        <h1 class="text-xl font-bold">Apple Maps Example</h1>
-      </header>
-
-      <main class="space-y-4">
-        <form id="search-form">
-          <div>
-            <label
-              for="search-box"
-              class="block text-sm font-medium leading-5 text-gray-700"
-              >Search a location</label
-            >
-            <div class="flex mt-1 rounded-md shadow-sm">
-              <div class="relative flex-grow focus-within:z-10">
-                <div
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-                >
-                  <svg
-                    class="w-5 h-5 text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <input
-                  id="search-box"
-                  class="block w-full pl-10 transition duration-150 ease-in-out rounded-none form-input rounded-l-md sm:text-sm sm:leading-5"
-                  placeholder="Search a location"
-                />
-              </div>
-              <button
-                class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out border border-gray-300 rounded-r-md bg-gray-50 hover:text-gray-500 hover:bg-white focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700"
-              >
-                <svg
-                  class="w-5 h-5 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-                <span class="ml-2">Search</span>
-              </button>
-            </div>
-          </div>
-        </form>
+    <div>
+      <main>
         <div
           id="apple-maps"
-          style="height: 800px"
+          style="height: 100vh"
           class="w-full rounded-md shadow-lg"
         />
       </main>
