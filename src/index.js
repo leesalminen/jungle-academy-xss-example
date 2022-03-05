@@ -43,5 +43,5 @@ mapkit.init({
 const center = new mapkit.Coordinate(9.1549238, -83.7570566)
 const map = new mapkit.Map("apple-maps", {
     center,
-    cameraDistance: 15000,
+    cameraDistance: 50000,
 })
