@@ -20,9 +20,24 @@ const fetchPins = () => {
         const pins = obj.data.businessMapMarkers
 
         const markerAnnotations = pins.map((el) => {
+
+            const calloutDelegate = {
+                calloutRightAccessoryForAnnotation: function() {
+                    const accessoryViewRight = document.createElement("a");
+                    accessoryViewRight.className = "right-accessory-view";
+                    accessoryViewRight.href = "https://pay.bitcoinjungle.app/" + el.username;
+                    accessoryViewRight.target = "_blank";
+                    accessoryViewRight.appendChild(document.createTextNode("➡"));
+
+                    return accessoryViewRight;
+                }
+            }
+
+
             const coordinate = new mapkit.Coordinate(el.mapInfo.coordinates.latitude, el.mapInfo.coordinates.longitude);
             return new mapkit.MarkerAnnotation(coordinate, {
                 title: el.mapInfo.title,
+                callout: calloutDelegate,
             });
         })
 
