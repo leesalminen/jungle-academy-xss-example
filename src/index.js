@@ -38,6 +38,7 @@ const fetchPins = () => {
             return new mapkit.MarkerAnnotation(coordinate, {
                 title: el.mapInfo.title,
                 callout: calloutDelegate,
+                titleVisibility: mapkit.FeatureVisibility.Hidden,
             });
         })
 
@@ -59,4 +60,23 @@ const center = new mapkit.Coordinate(9.1549238, -83.7570566)
 const map = new mapkit.Map("apple-maps", {
     center,
     cameraDistance: 50000,
+})
+
+map.addEventListener('zoom-end', (evt) => {
+    const map = mapkit.maps[0]
+    const curentCameraDistance = map.cameraDistance.toFixed(0)
+
+    if(curentCameraDistance < 10000) {
+        map.annotations = map.annotations.map((el) => {
+            el.titleVisibility = mapkit.FeatureVisibility.Visible
+
+            return el
+        })
+    } else {
+        map.annotations = map.annotations.map((el) => {
+            el.titleVisibility = mapkit.FeatureVisibility.Hidden
+
+            return el
+        })
+    }
 })
