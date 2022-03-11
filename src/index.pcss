@@ -10,13 +10,20 @@
 	position: absolute; 
 	top: 10px; 
 	left:  10px; 
-	z-index: 100; 
-	background-color: white; 
+	z-index: 3; 
+	background-color: rgba(255,255,255,.75);
+	box-shadow: 0 0 0 .5px rgba(0,0,0,.05);
 	padding: 10px; 
-	border-radius: 10px;
+	border-radius: 9px;
+	backdrop-filter: blur(30px);
+	-webkit-backdrop-filter: blur(30px);
 }
 
 #header img {
 	width: 50px;
 	margin: 0 auto;
+}
+
+#header span {
+	color: rgb(112, 113, 108);
 }
