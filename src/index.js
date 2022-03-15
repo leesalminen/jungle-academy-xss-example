@@ -1,6 +1,47 @@
-const fetchPins = () => {
+import 'babel-polyfill'
+import { initializeApp } from "firebase/app"
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore/lite'
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDKlGhb8voPdKxCfEI-7KC6zj9PoU7itUo",
+  authDomain: "bitcoin-jungle-maps.firebaseapp.com",
+  projectId: "bitcoin-jungle-maps",
+  storageBucket: "bitcoin-jungle-maps.appspot.com",
+  messagingSenderId: "962016469889",
+  appId: "1:962016469889:web:f331a8687c201f86f4fe80"
+}
+
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
+
+const getUserProvidedLocations = async () => {
+    const locationsCol = collection(db, 'locations')
+    const q = query(locationsCol, where("approved", "==", true))
+    const locationSnapshot = await getDocs(q)
+    const locationList = locationSnapshot.docs.map(doc => {
+        const data = doc.data()
+
+        return {
+            username: null,
+            acceptsLightning: data.acceptsLightning,
+            acceptsOnChain: data.acceptsOnChain,
+            acceptsLiquid: data.acceptsLiquid,
+            mapInfo: {
+                title: data.name,
+                coordinates: {
+                    latitude: data.latLong._lat,
+                    longitude: data.latLong._long,
+                }
+            }
+        }
+    })
+ 
+    addMapPins(locationList)
+}
+
+const getBitcoinJungleLocations = () => {
     const body = JSON.stringify({
-        "query": "query businessMapMarkers {     businessMapMarkers {       username       mapInfo {         title         coordinates {           longitude           latitude         }       }     }   }",
+        "query": "query businessMapMarkers { businessMapMarkers { username mapInfo { title coordinates { longitude latitude } } } }",
         "variables": {},
         "operationName": "businessMapMarkers"
     })
@@ -17,12 +58,55 @@ const fetchPins = () => {
     )
     .then((res) => res.json())
     .then((obj) => {
-        const pins = obj.data.businessMapMarkers
+        const pins = obj.data.businessMapMarkers.map((pin) => {
+            return {
+                username: pin.username,
+                acceptsLightning: true,
+                acceptsOnChain: true,
+                acceptsLiquid: false,
+                mapInfo: pin.mapInfo,
+            } 
+        })
 
-        const markerAnnotations = pins.map((el) => {
+        addMapPins(pins)
+    })
+}
 
-            const calloutDelegate = {
-                calloutRightAccessoryForAnnotation: function() {
+const addMapPins = (pins) => {
+    const markerAnnotations = pins.map((el) => {
+
+        const calloutDelegate = {
+            calloutContentForAnnotation: function() {
+                var element = document.createElement("div");
+                element.className = "review-callout-content";
+                var title = element.appendChild(document.createElement("h1"));
+                title.textContent = el.mapInfo.title;
+                
+                if(el.acceptsOnChain) {
+                    var img = element.appendChild(document.createElement("img"));
+                    img.src = "https://storage.googleapis.com/bitcoin-jungle-maps-images/onchain.png"
+                    img.width = 20
+                    img.style.display = "inline"
+                }
+
+                if(el.acceptsLightning) {
+                    var img = element.appendChild(document.createElement("img"));
+                    img.src = "https://storage.googleapis.com/bitcoin-jungle-maps-images/lightning.png"
+                    img.width = 20
+                    img.style.display = "inline"
+                }
+
+                if(el.acceptsLiquid) {
+                    var img = element.appendChild(document.createElement("img"));
+                    img.src = "https://storage.googleapis.com/bitcoin-jungle-maps-images/liquid.png"
+                    img.width = 20
+                    img.style.display = "inline"
+                }
+
+                return element;
+            },
+            calloutRightAccessoryForAnnotation: function() {
+                if(el.username) {
                     const accessoryViewRight = document.createElement("a");
                     accessoryViewRight.className = "right-accessory-view";
                     accessoryViewRight.href = "https://pay.bitcoinjungle.app/" + el.username;
@@ -30,20 +114,33 @@ const fetchPins = () => {
                     accessoryViewRight.appendChild(document.createTextNode("➡"));
 
                     return accessoryViewRight;
+                } else {
+                    const accessoryViewRight = document.createElement("a");
+                    accessoryViewRight.className = "right-accessory-view";
+                    accessoryViewRight.href = "#";
+
+                    return accessoryViewRight;
                 }
             }
+        }
 
 
-            const coordinate = new mapkit.Coordinate(el.mapInfo.coordinates.latitude, el.mapInfo.coordinates.longitude);
-            return new mapkit.MarkerAnnotation(coordinate, {
-                title: el.mapInfo.title,
-                callout: calloutDelegate,
-                titleVisibility: mapkit.FeatureVisibility.Hidden,
-            });
-        })
+        const coordinate = new mapkit.Coordinate(el.mapInfo.coordinates.latitude, el.mapInfo.coordinates.longitude)
 
-        map.addAnnotations(markerAnnotations);
+        let annotationObj = {
+            title: el.mapInfo.title,
+            callout: calloutDelegate,
+            titleVisibility: mapkit.FeatureVisibility.Hidden,
+        }
+
+        if(!el.username) {
+            annotationObj.color = "purple"
+        }
+
+        return new mapkit.MarkerAnnotation(coordinate, annotationObj)
     })
+
+    map.addAnnotations(markerAnnotations)
 }
 
 mapkit.init({
@@ -51,7 +148,8 @@ mapkit.init({
         fetch("/api/token")
         .then((res) => res.text())
         .then(done)
-        .then(fetchPins)
+        .then(getBitcoinJungleLocations)
+        .then(getUserProvidedLocations)
     },
     language: navigator.language || navigator.userLanguage,
 })
