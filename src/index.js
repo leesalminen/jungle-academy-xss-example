@@ -158,6 +158,7 @@ const center = new mapkit.Coordinate(9.1549238, -83.7570566)
 const map = new mapkit.Map("apple-maps", {
     center,
     cameraDistance: 50000,
+    showsPointsOfInterest: false,
 })
 
 map.addEventListener('zoom-end', (evt) => {
