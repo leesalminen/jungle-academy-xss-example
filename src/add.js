@@ -67,16 +67,19 @@ form.addEventListener('submit', async (e) => {
 
 	if(!postData.name) {
 		alert("Please enter a name")
+		submitButtonEl.style.display = "block"
 		return false
 	}
 
 	if(!parseFloat(postData.latitude)) {
 		alert("Invalid latitude coordinates")
+		submitButtonEl.style.display = "block"
 		return false
 	}
 
 	if(!parseFloat(postData.longitude)) {
 		alert("Invalid longitude coordinates")
+		submitButtonEl.style.display = "block"
 		return false
 	}
 
@@ -102,6 +105,7 @@ form.addEventListener('submit', async (e) => {
 		postData.latLong = new GeoPoint(postData.latitude, postData.longitude)
 	} catch(e) {
 		alert(e)
+		submitButtonEl.style.display = "block"
 		return false
 	}
 
@@ -110,6 +114,7 @@ form.addEventListener('submit', async (e) => {
 
 	if(!postData.acceptsOnChain && !postData.acceptsLightning && !postData.acceptsLiquid) {
 		alert("Please select at least one accepted coin")
+		submitButtonEl.style.display = "block"
 		return false
 	}
 
@@ -133,6 +138,7 @@ form.addEventListener('submit', async (e) => {
 		alert("This business has been added successfully. It will now be reviewed by an admin. Once approved, it will show on the map")
 	} catch(e) {
 		alert(e)
+		submitButtonEl.style.display = "block"
 		return false
 	}
 })
