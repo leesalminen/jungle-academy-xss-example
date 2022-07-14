@@ -44,8 +44,8 @@ const addListener = async () => {
 }
 
 const addComment = async () => {
-    const comment = document.getElementById('add').value
-    const docRef = await addDoc(collection(db, "comments"), {comment: comment})
+    const comment = document.getElementById('add')
+    const docRef = await addDoc(collection(db, "comments"), {comment: comment.value})
 
     comment.value = ''
 }
