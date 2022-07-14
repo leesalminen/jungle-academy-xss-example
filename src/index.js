@@ -33,10 +33,13 @@ const addListener = async () => {
         const commentsList = querySnapshot.docs.map(doc => {
             const comment = doc.data()
 
+            return comment
+        })
+
+        commentsList.sort(compare).reverse().forEach((comment) => {
             const itemEl = document.createElement('li')
             itemEl.classList.add("p-3");
-            console.log(comment.comment)
-            itemEl.innerHTML = comment.comment
+            itemEl.innerHTML = comment.comment + "<br><small>" + new Date(comment.created).toLocaleString("en-US") + "</small>"
 
             listEl.append(itemEl)
         })
@@ -45,9 +48,20 @@ const addListener = async () => {
 
 const addComment = async () => {
     const comment = document.getElementById('add')
-    const docRef = await addDoc(collection(db, "comments"), {comment: comment.value})
+    const date = new Date().getTime()
+    const docRef = await addDoc(collection(db, "comments"), {comment: comment.value, created: date})
 
     comment.value = ''
+}
+
+const compare = ( a, b ) => {
+  if ( a.created < b.created ){
+    return -1;
+  }
+  if ( a.created > b.created ){
+    return 1;
+  }
+  return 0;
 }
 
 addListener()
