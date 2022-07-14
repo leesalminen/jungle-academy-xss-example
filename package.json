@@ -13,12 +13,9 @@
   "author": "Florian Kapfenberger <florian@kapfenberger.me>",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^7.6.2",
     "@tailwindcss/ui": "^0.6.2",
     "babel-polyfill": "^6.26.0",
     "firebase": "^9.6.8",
-    "jsonwebtoken": "^8.5.1",
-    "netlify-lambda": "^2.0.1",
     "tailwindcss": "^1.8.10"
   },
   "devDependencies": {

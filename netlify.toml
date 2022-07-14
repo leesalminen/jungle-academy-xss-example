@@ -1,6 +1,5 @@
 [build]
   command = "npm run build"
-  functions = "src/functions"
   NODE_ENV = "12"
   publish = "/dist"
 
